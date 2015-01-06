@@ -2,7 +2,7 @@ package dipso
 
 type ProductResponse struct {
 	Status		Status			`json:"Status"`
-	Products	ProductList		`json:"Products"`
+	Wines		WineList		`json:"Products"`
 }
 
 type Status struct {
@@ -10,15 +10,15 @@ type Status struct {
 	ReturnCode	int			`json:"ReturnCode"`
 }
 
-type ProductList struct {
-	List		[]Product	`json:"List"`
+type WineList struct {
+	List		[]Wine	`json:"List"`
 	Offset		int			`json:"Offset"`
 	Total		int			`json:"Total"`
 	Url			string		`json:"Url"`
 }
 
 
-type Product struct {
+type Wine struct {
 	Id					int					`json:"Id"`
 	Name				string				`json:"Name"`
 	Url					string				`json:"Url"`
@@ -34,9 +34,9 @@ type Product struct {
 	PriceMax			float64				`json:"PriceMax"`
 	PriceMin			float64				`json:"PriceMin"`
 	PriceRetail			float64				`json:"PriceRetail"`
-	ProductAttributes	[]ProductAttribute	`json:"ProductAttributes"`
+	WineAttributes		[]WineAttribute		`json:"ProductAttributes"`
 	Ratings				Ratings				`json:"Ratings"`
-	Retail				Retail				`json:"Retail"`				// TODO: figure out retail type
+	Retail				Retail				`json:"Retail"`
 	Vintages			Vintages			`json:"Vintages"`
 }
 
@@ -98,7 +98,7 @@ type Reviews struct {
 	Url				string	`json:"Url"`
 }
 
-type ProductAttribute struct {
+type WineAttribute struct {
 	Id			int			`json:"Id"`
 	Name		string		`json:"Name"`
 	Url			string		`json:"Url"`
@@ -111,7 +111,11 @@ type Ratings struct {
 }
 
 type Retail struct {
-
+	InStock	bool	`json:"InStock"`
+	Price	float64	`json:"Price"`
+	Sku		string	`json:"Sku"`
+	State	string	`json:"State"`
+	Url		string	`json:"Url"`
 }
 
 type Vintages struct {
