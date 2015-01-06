@@ -27,6 +27,13 @@ func (self WineApi) SetApiKey(apiKey string) {
 	self.apiKey = apiKey
 }
 
+// This is a somewhat ugly hack, because I was having issues with the unquote solution
+// found at http://golang.org/src/encoding/json/decode.go. If anyone has a better solution,
+// I would gladly accept a PR
+func fixJson(jsonArr []byte) []byte {
+
+}
+
 func (self WineApi) Search(params string) (ProductList, error) {
 	var prodList ProductList
 	if params == "" {
@@ -43,6 +50,7 @@ func (self WineApi) Search(params string) (ProductList, error) {
 	if err != nil {
 		return prodList, err
 	}
+	body = fixJson(body)
 
 	var productResponse ProductResponse
 	err = json.Unmarshal(body, &productResponse)
