@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"strings"
+	"bytes"
 )
 
 const (
@@ -31,7 +32,7 @@ func (self WineApi) SetApiKey(apiKey string) {
 // found at http://golang.org/src/encoding/json/decode.go. If anyone has a better solution,
 // I would gladly accept a PR
 func fixJson(jsonArr []byte) []byte {
-
+	return bytes.Replace(jsonArr, []byte{'&', 'a', 'm', 'p', ';'}, []byte{'&'}, -1)
 }
 
 func (self WineApi) Search(params string) (ProductList, error) {
