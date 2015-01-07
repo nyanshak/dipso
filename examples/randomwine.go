@@ -1,9 +1,17 @@
+/*
+	This program shows a simple use case for the dipso wrapper:
+	opening a random wine's page based on cost, rating, and ship
+	state
+*/
+
+
 package main
 
 import (
 	"os"
 	"log"
 	"github.com/nyanshak/dipso"
+	"github.com/skratchdot/open-golang/open"
 	"flag"
 	"errors"
 	"math/rand"
@@ -69,29 +77,17 @@ func getRandomWine(api dipso.WineApi, shipState string, cost float64, rating int
 func main() {
 	api := dipso.NewWineApi(apiKey)
 
-	wines := []dipso.Wine{}
 
-	remainingMoney := *totalCost
-	for {
-		wine, err := getRandomWine(*api, "TX", remainingMoney, *rating)
-		if err != nil {
-			if err != NoWineFoundError {
-				log.Fatalln(err)
-			} else {
-				break
-			}
-		}
-
-		if wine.PriceRetail > remainingMoney {
-			continue
-		} else {
-			remainingMoney -= wine.PriceRetail
-		}
-		wines = append(wines, wine)
+	wine, err := getRandomWine(*api, "TX", *totalCost, *rating)
+	if err != nil {
+		log.Fatalln(err)
 	}
-
-	log.Printf("%d wine(s) for $%.2f (minus shipping)", len(wines), *totalCost - remainingMoney)
-	for _, v := range wines {
-		log.Println(v.Retail.Url)
+	log.Printf("Opening browser with your random wine...")
+	err = open.Run(wine.Url)
+	if err != nil {
+		log.Fatalln(err)
 	}
+	
+	//log.Printf("$%.2f (minus shipping); Url: %s", wine.PriceRetail, wine.Url)
+
 }
