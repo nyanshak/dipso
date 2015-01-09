@@ -39,7 +39,7 @@ func init() {
 	}
 }
 
-func getRandomWine(api dipso.WineApi, shipState string, cost float64, rating int) (dipso.Wine, error) {
+func getRandomWine(api dipso.WineApi, shipState string, cost float64, rating int) (dipso.Product, error) {
 	redWineFilter := "categories(490+124)"
 	searchStr := "state=" + shipState + "&instock=true&filter=" + redWineFilter
 
@@ -55,7 +55,7 @@ func getRandomWine(api dipso.WineApi, shipState string, cost float64, rating int
 
 	wines, err := api.Search(searchStr + "&size=0&offset=0")
 
-	var blankWine dipso.Wine
+	var blankWine dipso.Product
 	if err != nil {
 		return blankWine, err
 	}
@@ -87,7 +87,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	
+
 	//log.Printf("$%.2f (minus shipping); Url: %s", wine.PriceRetail, wine.Url)
 
 }

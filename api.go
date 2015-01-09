@@ -28,8 +28,8 @@ func (self WineApi) SetApiKey(wineApiKey string) {
 	self.apiKey = wineApiKey
 }
 
-func (self WineApi) Search(params string) (WineList, error) {
-	var wineList WineList
+func (self WineApi) Search(params string) (ProductList, error) {
+	var wineList ProductList
 	if params == "" {
 		return wineList, errors.New("params cannot be empty")
 	}
@@ -54,7 +54,7 @@ func (self WineApi) Search(params string) (WineList, error) {
 	} else if productResponse.Status.ReturnCode != 0 {
 		return wineList, errors.New(strings.Join(productResponse.Status.Messages, ","))
 	} else {
-		wineList = productResponse.Wines
+		wineList = productResponse.Products
 		return wineList, nil
 	}
 }

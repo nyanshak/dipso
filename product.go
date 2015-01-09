@@ -2,23 +2,18 @@ package dipso
 
 type ProductResponse struct {
 	Status		Status			`json:"Status"`
-	Wines		WineList		`json:"Products"`
+	Products	ProductList		`json:"Products"`
 }
 
-type Status struct {
-	Messages	[]string	`json:"Messages"`
-	ReturnCode	int			`json:"ReturnCode"`
-}
-
-type WineList struct {
-	List		[]Wine	`json:"List"`
+type ProductList struct {
+	List		[]Product	`json:"List"`
 	Offset		int			`json:"Offset"`
 	Total		int			`json:"Total"`
 	Url			string		`json:"Url"`
 }
 
 
-type Wine struct {
+type Product struct {
 	Id					int					`json:"Id"`
 	Name				string				`json:"Name"`
 	Url					string				`json:"Url"`
@@ -29,15 +24,15 @@ type Wine struct {
 	Vineyard			Vineyard			`json:"Vineyard"`
 	Vintage				string				`json:"Vintage"`
 	Community			Community			`json:"Community"`
-	Description			string				`json:"Description"`
+	Description			string				`json:"Description"` // Only provided with partner level access, otherwise blank
 	GeoLocation			GeoLocation			`json:"GeoLocation"`
 	PriceMax			float64				`json:"PriceMax"`
 	PriceMin			float64				`json:"PriceMin"`
 	PriceRetail			float64				`json:"PriceRetail"`
-	WineAttributes		[]WineAttribute		`json:"ProductAttributes"`
+	ProductAttributes	[]ProductAttribute	`json:"ProductAttributes"`
 	Ratings				Ratings				`json:"Ratings"`
 	Retail				Retail				`json:"Retail"`
-	Vintages			Vintages			`json:"Vintages"`
+	Vintages			Vintages			`json:"Vintages"` // Only provided with partner level access, otherwise blank
 }
 
 type Appellation struct {
@@ -51,7 +46,14 @@ type Region struct {
 	Id		int			`json:"Id"`
 	Name	string		`json:"Name"`
 	Url		string		`json:"Url"`
-	Area	string		`json:"Area"`		// not sure what type Area is yet: TODO: figure out / fix type
+	Area	string		`json:"Area"`
+}
+
+type Area struct {
+	Id		int			`json:"Id"`
+	Name	string		`json:"Name"`
+	Url		string		`json:"Url"`
+	Parent	*Area		`json:"Parent"`
 }
 
 type Label struct {
@@ -81,6 +83,7 @@ type Vineyard struct {
 	GeoLocation	GeoLocation	`json:"GeoLocation"`
 }
 
+// This is only provided with Wine.com partner access (shows as -360, -360 otherwise)
 type GeoLocation struct {
 	Latitude	int			`json:"Latitude"`
 	Longitude	int			`json:"Longitude"`
@@ -88,8 +91,8 @@ type GeoLocation struct {
 }
 
 type Community struct {
-	Reviews		Reviews		`json:"Reviews"`
-	Url			string		`json:"Url"`
+	Reviews		Reviews				`json:"Reviews"`
+	Url			string				`json:"Url"`
 }
 
 type Reviews struct {
@@ -98,7 +101,7 @@ type Reviews struct {
 	Url				string	`json:"Url"`
 }
 
-type WineAttribute struct {
+type ProductAttribute struct {
 	Id			int			`json:"Id"`
 	Name		string		`json:"Name"`
 	Url			string		`json:"Url"`
@@ -107,7 +110,7 @@ type WineAttribute struct {
 
 type Ratings struct {
 	HighestScore	int		`json:"HighestScore"`
-	List			[]int	`json:"List"`
+	List			[]int	`json:"List"` // only provided with partner access
 }
 
 type Retail struct {
