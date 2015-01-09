@@ -2,7 +2,7 @@ package dipso
 
 type ReferenceResponse struct {
 	Status		Status		`json:"Status"`
-	Blog		[]string	`json:"Blog"`
+	Blogs		[]string	`json:"Blog"`
 	Books		[]Book		`json:"Books"`
 	Vineyards	[]Vineyard	`json:"Vineyards"`
 }

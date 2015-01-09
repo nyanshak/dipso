@@ -53,7 +53,7 @@ func getRandomWine(api dipso.WineApi, shipState string, cost float64, rating int
 		searchStr += "+rating(" + ratingStr + "|100)"
 	}
 
-	wines, err := api.Search(searchStr + "&size=0&offset=0")
+	wines, err := api.SearchCatalog(searchStr + "&size=0&offset=0")
 
 	var blankWine dipso.Product
 	if err != nil {
@@ -65,7 +65,7 @@ func getRandomWine(api dipso.WineApi, shipState string, cost float64, rating int
 	}
 
 	wineId := int64(randomGenerator.Intn(wines.Total))
-	wines, err = api.Search(searchStr + "&size=1&offset=" + strconv.FormatInt(wineId, 10))
+	wines, err = api.SearchCatalog(searchStr + "&size=1&offset=" + strconv.FormatInt(wineId, 10))
 
 	if err != nil {
 		return blankWine, err

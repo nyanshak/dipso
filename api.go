@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	BaseUrl		= "http://services.wine.com/api/beta2/service.svc/json"
-	CatalogUrl	= BaseUrl + "/catalog"
-	CategoryUrl	= BaseUrl + "/categoryMap"
+	BaseUrl			= "http://services.wine.com/api/beta2/service.svc/json"
+	CatalogUrl		= BaseUrl + "/catalog"
+	CategoryUrl		= BaseUrl + "/categoryMap"
+	ReferenceUrl	= BaseUrl + "/reference"
 )
 
 type WineApi struct {
@@ -28,7 +29,7 @@ func (self WineApi) SetApiKey(wineApiKey string) {
 	self.apiKey = wineApiKey
 }
 
-func (self WineApi) Search(params string) (ProductList, error) {
+func (self WineApi) SearchCatalog(params string) (ProductList, error) {
 	var wineList ProductList
 	if params == "" {
 		return wineList, errors.New("params cannot be empty")
@@ -56,6 +57,73 @@ func (self WineApi) Search(params string) (ProductList, error) {
 	} else {
 		wineList = productResponse.Products
 		return wineList, nil
+	}
+}
+
+func (self WineApi) SearchCategory(params string) ([]Category, error) {
+	var categoryList []Category
+	if params == "" {
+		return categoryList, errors.New("params cannot be empty")
+	}
+	requestUrl := CategoryUrl + "?apikey=" + self.apiKey + "&" + params
+	resp, err := http.Get(requestUrl)
+
+	if err != nil {
+		return categoryList, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return categoryList, err
+	}
+	body = fixJson(body)
+
+	var categoryResponse CategoryResponse
+	err = json.Unmarshal(body, &categoryResponse)
+
+	if err != nil {
+		return categoryList, err
+	} else if categoryResponse.Status.ReturnCode != 0 {
+		return categoryList, errors.New(strings.Join(categoryResponse.Status.Messages, ","))
+	} else {
+		categoryList = categoryResponse.Categories
+		return categoryList, nil
+	}
+}
+
+func (self WineApi) FilterReference(params string) (blogs []string, books []Book, vineyards []Vineyard, err error) {
+	if params == "" {
+		err = errors.New("params cannot be empty")
+		return
+	}
+
+	requestUrl := ReferenceUrl + "?apikey=" + self.apiKey + "&" + params
+	resp, err := http.Get(requestUrl)
+
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return
+	}
+	body = fixJson(body)
+
+	var referenceResponse ReferenceResponse
+	err = json.Unmarshal(body, &referenceResponse)
+
+	if err != nil {
+		return
+	} else if referenceResponse.Status.ReturnCode != 0 {
+		err = errors.New(strings.Join(referenceResponse.Status.Messages, ","))
+		return
+	} else {
+		blogs = referenceResponse.Blogs
+		books = referenceResponse.Books
+		vineyards = referenceResponse.Vineyards
+		err = nil
+		return
 	}
 }
 
